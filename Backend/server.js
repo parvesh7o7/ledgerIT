@@ -1,9 +1,10 @@
+import dotenv from "dotenv";
 import express, { json } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import pool from "./config/db.js";
 import transactionRoute from "./routes/transactionRoute.js";
-import dotenv from "dotenv";
+import chatRoute from "./routes/chatRoute.js";
 
 dotenv.config();
 const app = express();
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/api/transactions", transactionRoute);
-
+app.use("/api/chat", chatRoute);
 app.use((err, req, res, next) => {
     console.error("Server Error:", err.stack);
     res.status(500).json({
