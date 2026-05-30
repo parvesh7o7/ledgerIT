@@ -1,26 +1,26 @@
-import pool from "../config/db";
-const transcation = {
-    create: async (transcationData) => {
-        const { user_id, type, contact_name, amount, description } = transcationData;
+import pool from "../config/db.js";
+const Transaction = {
+    create: async (transactionData) => {
+        const { user_id, type, contact_name, amount, description } = transactionData;
         const query = `
             INSERT INTO transactions (user_id, type, contact_name, amount, description) 
             VALUES (?, ?, ?, ?, ?);
         `;
-        const [result] = await db.execute(query, [user_id, type, contact_name, amount, description]);
+        const [result] = await pool.execute(query, [user_id, type, contact_name, amount, description]);
         return result.insertId;
     },
     findTransactionByID: async (userID) => {
         const query = `
             SELECT id, type, contact_name, amount, description, timestamp 
-            FROM transactions 
+            FROM transactions  
             WHERE user_id = ? 
             ORDER BY timestamp DESC
         `;
-        const [rows] = await db.execute(query, [userId]);
+        const [rows] = await pool.execute(query, [userID]);
         return rows;
     },
 
-    getFinancialSummary: async (userId) => {
+    getFinancialSummary: async (userID) => {
         const query = `
             SELECT 
                 SUM(CASE WHEN type = 'debit' THEN amount ELSE 0 END) AS total_lent,
@@ -28,7 +28,7 @@ const transcation = {
             FROM transactions 
             WHERE user_id = ?
         `;
-        const [rows] = await db.execute(query, [userId]);
+        const [rows] = await pool.execute(query, [userID]);
 
         return {
             total_lent: parseFloat(rows[0].total_lent) || 0,
@@ -37,4 +37,4 @@ const transcation = {
     }
 }
 
-export default transcation;
+export default Transaction;
