@@ -16,9 +16,9 @@ export const createTransaction = async (req, res, next) => {
             });
         }
 
-        const mockID = "user123";
+        const userID = req.user.id;
         const transaction_ID = Transaction.create({
-            user_id: mockID,
+            user_id: userID,
             type,
             contact_name,
             amount,
@@ -36,11 +36,11 @@ export const createTransaction = async (req, res, next) => {
 
 export const getDashboardSummary = async (req, res, next) => {
     try {
-        const mockUserId = "user123";
+        const userID = req.user.id;
 
         const [transactions, summary] = await Promise.all([
-            Transaction.findTransactionByID(mockUserId),
-            Transaction.getFinancialSummary(mockUserId)
+            Transaction.findTransactionByID(userID),
+            Transaction.getFinancialSummary(userID)
         ]);
 
         return res.status(200).json({
