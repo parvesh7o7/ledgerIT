@@ -1,5 +1,6 @@
 import { analyzeChatMessage } from "../services/aiService.js";
 import Transaction from "../model/transactions.js";
+import user from "../model/users.js";
 
 export const processChat = async (req, res, next) => {
     try {
@@ -15,7 +16,7 @@ export const processChat = async (req, res, next) => {
 
         if (analysis.actionType === "record_transaction") {
             const transactionId = Transaction.create({
-                user_id: "user123", //to be changed
+                user_id: req.user.id, //to be changed
                 type: analysis.transactionType,
                 contact_name: analysis.contactName,
                 amount: analysis.amount,
@@ -30,11 +31,11 @@ export const processChat = async (req, res, next) => {
         };
 
         if (analysis.actionType === "get_summary") {
-            const mockUserId = "user123";
+            const userID = req.user.id;
 
             const [transactions, summary] = await Promise.all([
-                Transaction.findTransactionByID(mockUserId),
-                Transaction.getFinancialSummary(mockUserId)
+                Transaction.findTransactionByID(userID),
+                Transaction.getFinancialSummary(userID)
             ]);
 
             return res.status(200).json({

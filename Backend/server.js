@@ -5,6 +5,7 @@ import morgan from "morgan";
 import pool from "./config/db.js";
 import transactionRoute from "./routes/transactionRoute.js";
 import chatRoute from "./routes/chatRoute.js";
+import authRoute from "./routes/authRoute.js";
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.use(morgan("dev"));
 
 app.use("/api/transactions", transactionRoute);
 app.use("/api/chat", chatRoute);
+app.use("/api/auth", authRoute);
 app.use((err, req, res, next) => {
     console.error("Server Error:", err.stack);
     res.status(500).json({
