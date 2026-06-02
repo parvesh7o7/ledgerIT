@@ -8,6 +8,9 @@ const ledgerActionSchema = z.object({
     contactName: z.string().optional().describe("The name of person involved in the transaction"),
     amount: z.number().optional().describe("Monetary amount of the transcation"),
     description: z.string().optional().describe("Reason or the context of the transcation (eg. dinner, tickets)"),
+    reminderRequired: z.boolean().optional().describe("true if the user requests a reminder or scheduling, false otherwise"),
+    reminderIntervalDays: z.number.optional().describe("interval in days. eg, 'every 7 days'=7, 'every week'=7, every month'=30. default to null if not specified"),
+    contactPhone: z.string().optional().describe("Phone number of the contact if provided in the text. eg, '+1234567890'")
 })
 
 //ai model creation
