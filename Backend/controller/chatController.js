@@ -1,5 +1,6 @@
 import { analyzeChatMessage } from "../services/aiService.js";
 import Transaction from "../model/transactions.js";
+import reminder from "../model/reminders.js";
 import user from "../model/users.js";
 
 export const processChat = async (req, res, next) => {
@@ -15,7 +16,7 @@ export const processChat = async (req, res, next) => {
         const analysis = await analyzeChatMessage(message);
 
         if (analysis.actionType === "record_transaction") {
-            const transactionId = Transaction.create({
+            const transactionId = await Transaction.create({
                 user_id: req.user.id, //to be changed
                 type: analysis.transactionType,
                 contact_name: analysis.contactName,
@@ -23,6 +24,22 @@ export const processChat = async (req, res, next) => {
                 description: analysis.description || null,
             })
 
+            if (analysis.reminderRequired === true) {
+                const intervalDays = analysis.reminderIntervalDays || 7;
+
+                const nextReminderDate = new Date();
+                nextReminderDate.setDate(nextReminderDate.getDate() + intervalDays);
+
+                await reminder.create({
+                    user_id: req.user.id,
+                    transaction_id: transactionId,
+                    contact_name: analysis.contactName,
+                    contact_phone: analysis.contactPhone || null,
+                    amount: analysis.amount,
+                    interval_days: intervalDays,
+                    next_reminder_date: nextReminderDate,
+                })
+            }
             return res.status(201).json({
                 success: true,
                 action: "record_transaction",

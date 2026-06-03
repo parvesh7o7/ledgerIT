@@ -6,6 +6,7 @@ import pool from "./config/db.js";
 import transactionRoute from "./routes/transactionRoute.js";
 import chatRoute from "./routes/chatRoute.js";
 import authRoute from "./routes/authRoute.js";
+import "./workers/reminderCron.js";
 
 dotenv.config();
 const app = express();
