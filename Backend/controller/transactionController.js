@@ -16,15 +16,15 @@ export const createTransaction = async (req, res, next) => {
             });
         }
 
-        const userID = req.user.id;
         const transaction_ID = Transaction.create({
-            user_id: userID,
+            user_id: req.user.id,
             type,
             contact_name,
             amount,
             description: description || null
         });
 
+        
         return res.status(201).json({
             success: true,
             message: "Transaction recorded successfully!"
