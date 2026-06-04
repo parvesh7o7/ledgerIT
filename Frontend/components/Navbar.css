@@ -1,0 +1,275 @@
+/* Navbar Sidebar Styling */
+
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 76px;
+  /* Collapsed width */
+  background: #0f172a;
+  /* Sleek dark slate background */
+  border-right: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 1000;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease, box-shadow 0.35s ease;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* When the sidebar is open */
+.navbar-container.open {
+  width: 15%;
+  /* Expanded width */
+  background: #0b0f19;
+  /* Slightly darker when open for premium feel */
+  box-shadow: 6px 0 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Header Section */
+.navbar-header {
+  display: flex;
+  align-items: center;
+  padding: 24px 16px;
+  gap: 16px;
+  border-bottom: 1px solid #1e293b;
+  min-height: 80px;
+  box-sizing: border-box;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.navbar-logo img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.navbar-logo-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.navbar-logo-label h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #f8fafc;
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.navbar-logo-label p {
+  color: #64748b;
+  margin: 2px 0 0 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.navbar-links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  padding: 24px 12px;
+}
+
+.navbar-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: #94a3b8;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  gap: 16px;
+  white-space: nowrap;
+}
+
+.navbar-link.active {
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+  border: 1px solid #373886;
+  padding-left: 11px;
+}
+
+.navbar-link.active svg {
+  color: #6366f1;
+}
+
+.navbar-link svg {
+  min-width: 24px;
+  height: 24px;
+  stroke-width: 2;
+  transition: transform 0.2s ease;
+}
+
+/* Hover effects for links */
+.navbar-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+.navbar-link:hover svg {
+  color: #6366f1;
+  /* Premium Indigo hover accent */
+  transform: scale(1.05);
+}
+
+.navbar-label,
+.about-label,
+.pricing-label {
+  animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.navbar-label p,
+.about-label p,
+.pricing-label p {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Footer Section */
+.navbar-footer {
+  padding: 20px 16px;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 130px;
+  box-sizing: border-box;
+}
+
+.navbar-user-logo,
+.navbar-signup-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.3s ease;
+}
+
+.navbar-footer:hover .navbar-user-logo,
+.navbar-footer:hover .navbar-signup-logo {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-user-info {
+  color: #f8fafc;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.navbar-signup-button {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  white-space: nowrap;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.log-out-button {
+  background: rgba(239, 68, 68, 0.1);
+  /* Subtle red warning background */
+  color: #ef4444;
+  /* Clean vibrant red text */
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 0;
+  width: 50%;
+}
+
+.log-out-button:hover {
+  background: #ef4444;
+  /* Fills button with red on hover */
+  color: #ffffff;
+  /* White text on hover */
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  transform: translateY(-1px);
+}
+
+.log-out-button:active {
+  transform: translateY(0);
+}
+
+.navbar-user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.logout-section {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navbar-signup-button:hover {
+  background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+}
+
+.navbar-signup-button:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
