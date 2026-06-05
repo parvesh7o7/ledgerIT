@@ -1,0 +1,21 @@
+/* src/App.css */
+
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Page body styling */
+body {
+    background-color: #07080d;
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Custom layout class */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
