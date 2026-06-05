@@ -1,0 +1,227 @@
+/* Transaction Table Stylesheet */
+
+.table-container {
+  width: 100vw;
+  max-width: 70%;
+  background: rgba(15, 23, 42, 0.45);
+  /* Glassmorphism background */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  margin-top: 40px;
+  box-sizing: border-box;
+  animation: tableFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes tableFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  animation: tableFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes tableFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.table-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.table-header-row h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.summary-badges {
+  display: flex;
+  gap: 12px;
+}
+
+.summary-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summary-badge.lent {
+  background: rgba(74, 222, 128, 0.08);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.2);
+}
+
+.summary-badge.owed {
+  background: rgba(248, 113, 113, 0.08);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+}
+
+.ledger-table th {
+  background: rgba(15, 23, 42, 0.6);
+  padding: 16px;
+  color: #94a3b8;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ledger-table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+  transition: background-color 0.2s ease;
+}
+
+.ledger-table tbody tr {
+  transition: all 0.25s ease;
+}
+
+.ledger-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.ledger-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tx-id {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.contact-name {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+/* Badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge-debit {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.badge-credit {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.badge-icon {
+  margin-top: -1px;
+}
+
+/* Amount styles */
+.amount {
+  font-weight: 700;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  /* Nice code styling for amounts */
+}
+
+.amount-debit {
+  color: #4ade80;
+}
+
+.amount-credit {
+  color: #f87171;
+}
+
+.description {
+  color: #94a3b8;
+  max-width: 250px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  max-height: 1.5em;
+  /* Exactly one line high */
+  white-space: normal;
+  word-break: break-word;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ledger-table tbody tr:hover .description {
+  -webkit-line-clamp: 99;
+  /* Safe large number to display full text in all browsers */
+  max-height: 200px;
+  /* Smoothly expands up to 200px */
+}
+
+.date {
+  color: #64748b;
+}
+
+/* Responsive breakpoint */
+@media (max-width: 768px) {
+  .table-container {
+    padding: 16px;
+    margin-top: 20px;
+  }
+
+  .table-header-row h2 {
+    font-size: 1.25rem;
+  }
+
+  .summary-badge {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}
