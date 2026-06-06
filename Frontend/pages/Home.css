@@ -1,17 +1,1 @@
-.welcome-title {
-    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-    font-size: 6rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: #ffffff;
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-    margin: 0;
-    line-height: 2;
-}
-
-/* Responsive adjustment for tablet/mobile */
-@media (max-width: 768px) {
-    .welcome-title {
-        font-size: 3.5rem;
-    }
-}
+@import "tailwindcss";
