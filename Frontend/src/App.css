@@ -14,7 +14,7 @@
 body {
     background-color: #07080d;
     color: #f8fafc;
-    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 /* Custom layout class */
