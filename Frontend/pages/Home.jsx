@@ -173,7 +173,7 @@ function Home() {
                     </div>
                 </div>
             </motion.div>
-            <motion.div>
+            <motion.div className='m-9'>
                 <TransactionTable />
             </motion.div>
         </>
