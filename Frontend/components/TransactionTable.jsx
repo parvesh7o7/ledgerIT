@@ -1,4 +1,4 @@
-import { act, useState } from "react";
+import { useState, useMemo } from "react";
 
 function TransactionTable() {
     const FILTERS = ["all", "lent", "borrow", "settled"];
@@ -8,22 +8,30 @@ function TransactionTable() {
         { id: 2, name: "Amara Osei", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 1500, date: "Jun 05, 2026", note: "Medical bills", status: "pending" },
         { id: 3, name: "James Liu", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "borrow", amount: 60, date: "Jun 04, 2026", note: "Dinner split", status: "settled" },
         { id: 4, name: "Priya Nair", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 300, date: "Jun 01, 2026", note: "Bus pass", status: "pending" },
-        { id: 5, name: "Priya sain", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 800, date: "Jun 01, 2026", note: "gate pass", status: "settled" }
+        { id: 5, name: "Priya sain", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 800, date: "Jun 01, 2026", note: "gate pass", status: "settled" },
+        { id: 6, name: "Sanjana", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 800, date: "Jun 01, 2026", note: "gate pass", status: "settled" },
+        { id: 7, name: "Pradhan", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 800, date: "Jun 01, 2026", note: "gate pass", status: "settled" }
     ];
 
     const activeTable = transactions;
     const [activeFilter, setActiveFilter] = useState("all");
-    const filtered = activeFilter === "all" ?
-        transactions :
-        activeTable.filter((t) => {
-            if (activeFilter != "settled") {
-                return t.type === activeFilter;
-            } else {
-                return t.status === "settled";
-            }
-        });
+    const filtered = useMemo(() => {
+        return activeFilter === "all" ?
+            transactions :
+            activeTable.filter((t) => {
+                if (activeFilter != "settled") {
+                    return t.type === activeFilter;
+                } else {
+                    return t.status === "settled";
+                }
+            })
+    }, [activeFilter]);
 
     const [currentPage, setCurrentPage] = useState(1);
+    const PAGE_SIZE = 5;
+    const TOTAT_PAGES = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+    const emptyRowsCount = PAGE_SIZE - paginated.length;
     return (
         <>
             <div className="table-container w-full max-w-full px-9 md:px-8 mb-24 z-10 relative bg-slate-950/40 backdrop-blur-3xl border border-slate-800/80 rounded-3xl p-6 md:p-8 shadow-2xl">
@@ -34,9 +42,15 @@ function TransactionTable() {
                     </div>
                     <div className="header-options flex bg-slate-900/80 p-1 rounded-xl border border-slate-800/80 w-full sm:w-auto overflow-x-auto">
                         {FILTERS.map((f) => (
-                            <button className="px-4 py-1.5 rounded-lg text-lg font-bold tracking-wide uppercase text-slate-400 hover:text-white transition-all duration-200 cursor-pointer whitespace-nowrap"
+                            <button className={`px-4 py-1.5 rounded-lg text-lg font-bold tracking-wide uppercase transition-all duration-200 cursor-pointer whitespace-nowrap ${activeFilter === f
+                                ? "bg-slate-800/80 text-white border border-slate-700/60"
+                                : "text-slate-400 hover:text-white border border-transparent"
+                                }`}
                                 key={f}
-                                onClick={() => setActiveFilter(f)}
+                                onClick={() => {
+                                    setActiveFilter(f);
+                                    setCurrentPage(1);
+                                }}
                             >{f}</button>
                         ))}
                     </div>
@@ -52,7 +66,7 @@ function TransactionTable() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-800/40">
-                            {filtered.map((t) => (
+                            {paginated.map((t) => (
 
                                 <tr key={t.id} className="group hover:bg-slate-900/20 transition-all duration-150">
                                     {/* serialnumber */}
@@ -108,14 +122,19 @@ function TransactionTable() {
                                     </td>
                                 </tr>
                             ))}
+                            {emptyRowsCount > 0 && Array.from({ length: emptyRowsCount }).map((_, index) => (
+                                <tr key={`empty-${index}`} className="h-18.25">
+                                    <td colSpan={7}>&nbsp;</td>
+                                </tr>
+                            ))}
                         </tbody>
                         <tr>
                             <td colSpan={7} className="text-right ">
                                 <div className="page-button inline-flex rounded-lg bg-slate-900/80 backdrop-blur-3xl w-xl justify-between border border-slate-800/80 h-15 mt-2">
-                                    <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest">Previous</button>
+                                    <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest disabled:text-slate-600 disabled:cursor-default disabled:tracking-normal" onClick={() => setCurrentPage(prev => prev - 1)} disabled={currentPage === 1}>Previous</button>
                                     <div className="hidden md:block w-px bg-slate-800/80 self-stretch z-10" />
                                     <div className="block md:hidden h-px bg-slate-800/80 w-full z-10" />
-                                    <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest">Next</button>
+                                    <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest disabled:text-slate-600 disabled:cursor-default disabled:tracking-normal" onClick={() => setCurrentPage(prev => prev + 1)} disabled={currentPage === TOTAT_PAGES}>Next</button>
                                 </div>
                             </td>
                         </tr>
