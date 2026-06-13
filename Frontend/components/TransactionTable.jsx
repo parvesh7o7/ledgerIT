@@ -128,16 +128,18 @@ function TransactionTable() {
                                 </tr>
                             ))}
                         </tbody>
-                        <tr>
-                            <td colSpan={7} className="text-right ">
-                                <div className="page-button inline-flex rounded-lg bg-slate-900/80 backdrop-blur-3xl w-xl justify-between border border-slate-800/80 h-15 mt-2">
-                                    <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest disabled:text-slate-600 disabled:cursor-default disabled:tracking-normal" onClick={() => setCurrentPage(prev => prev - 1)} disabled={currentPage === 1}>Previous</button>
-                                    <div className="hidden md:block w-px bg-slate-800/80 self-stretch z-10" />
-                                    <div className="block md:hidden h-px bg-slate-800/80 w-full z-10" />
-                                    <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest disabled:text-slate-600 disabled:cursor-default disabled:tracking-normal" onClick={() => setCurrentPage(prev => prev + 1)} disabled={currentPage === TOTAT_PAGES}>Next</button>
-                                </div>
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td colSpan={7} className="text-right ">
+                                    <div className="page-button inline-flex rounded-lg bg-slate-900/80 backdrop-blur-3xl w-xl justify-between border border-slate-800/80 h-15 mt-2">
+                                        <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest disabled:text-slate-600 disabled:cursor-default disabled:tracking-normal" onClick={() => setCurrentPage(prev => prev - 1)} disabled={currentPage === 1}>Previous</button>
+                                        <div className="hidden md:block w-px bg-slate-800/80 self-stretch z-10" />
+                                        <div className="block md:hidden h-px bg-slate-800/80 w-full z-10" />
+                                        <button className="text-xl cursor-pointer text-center w-sm text-slate-400 hover:text-white transition-all duration-200 hover:tracking-widest disabled:text-slate-600 disabled:cursor-default disabled:tracking-normal" onClick={() => setCurrentPage(prev => prev + 1)} disabled={currentPage === TOTAT_PAGES}>Next</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

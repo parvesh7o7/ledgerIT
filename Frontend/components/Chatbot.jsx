@@ -1,6 +1,31 @@
+import { useState, useRef, useEffect } from "react";
 import "./Chatbot.css"
-import { Send } from 'lucide-react';
+import { Key, Send } from 'lucide-react';
 function Chatbot() {
+    const [message, setMessage] = useState([]);
+    const [input, setInput] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [message]);
+
+    const handleSendButton = () => {
+        // don't send empty messages
+        if (!input.trim()) return;
+
+        // add user message
+        setMessage(prev => [...prev, {
+            id: Date.now(),
+            role: "user",
+            text: input.trim()
+        }]);
+
+        // clear input
+        setInput("");
+    };
+
     return (
         <>
             <div className="flex flex-col h-screen w-full p-6 bg-[#07080d] font-sans">
@@ -14,19 +39,30 @@ function Chatbot() {
                     </div>
                 </div>
 
-                <div className="flex-1 mt-4 rounded-2xl bg-blue-800/5 border border-slate-800/40 shadow-inner overflow-y-auto p-4">
-
+                <div className="flex-1 min-h-0 mt-4 rounded-2xl bg-blue-800/5 border border-slate-800/40 shadow-inner overflow-y-auto p-4 scrollbar-thin [scrollbar-color:#a18cd1_rgba(15,23,42,0.3)] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-slate-900/30 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-purple-400/70 hover:[&::-webkit-scrollbar-thumb]:bg-purple-300">
+                    {message.map((msg) => (
+                        <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`} key={msg.id}>
+                            <div className={`px-4 py-2 mt-3 rounded-2xl max-w-[75%] text-2xl
+                                    ${msg.role === "user"
+                                    ? "bg-purple-600 text-white rounded-br-sm"
+                                    : "bg-slate-100 text-slate-900 rounded-bl-sm"
+                                }`}>{msg.text}</div>
+                        </div>
+                    ))}
+                    <div ref={messagesEndRef} />
                 </div>
 
                 <div className="mt-3 rounded-2xl bg-slate-950/50 border border-slate-800/60 focus-within:border-sky-500/40 transition-colors duration-200">
-                    <form className="flex items-center gap-4 p-2">
-                        <input type="text" placeholder="Enter your query" className="w-full bg-transparent outline-none py-2 px-3 text-slate-100 placeholder-slate-500 text-lg" />
-                        <button className="p-3 bg-linear-to-r from-[#00F2FE] via-[#38BDF8] to-[#A18CD1] text-[#07080d] rounded-full cursor-pointer hover:scale-95 transition-transform duration-200"><Send size={20} /></button>
+                    <form className="flex items-center gap-4 p-2" onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSendButton();
+                    }}>
+                        <input value={input} type="text" placeholder="Enter your query" className="w-full bg-transparent outline-none py-2 px-3 text-slate-100 placeholder-slate-500 text-lg" onChange={(e) => setInput(e.target.value)} />
+                        <button className="p-3 bg-linear-to-r from-[#00F2FE] via-[#38BDF8] to-[#A18CD1] text-[#07080d] rounded-full cursor-pointer hover:scale-95 transition-transform duration-200" type="submit"><Send size={20} /></button>
                     </form>
                 </div>
             </div >
         </>
     )
 }
-
 export default Chatbot;
