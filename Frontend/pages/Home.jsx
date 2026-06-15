@@ -3,7 +3,7 @@ import Aurora from '../src/component/Aurora.jsx';
 import { motion } from "motion/react"
 import vdo from '../assets/bg-video.mp4'
 import { CirclePlus, CircleMinus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TransactionTable from '../components/TransactionTable.jsx';
 function Home({ isLoggedIn }) {
     const handleGetStarted = () => {
@@ -11,6 +11,30 @@ function Home({ isLoggedIn }) {
         if (googleBtn) googleBtn.click();
     };
 
+    const [total_lent, setTotalLent] = useState(0);
+    const [total_owed, setTotalOwed] = useState(0);
+    useEffect(() => {
+        if (!isLoggedIn) return;
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/dashboard`, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    },
+                });
+                const data = await response.json();
+                if (data.success) {
+                    setTotalLent(data.summary.total_lent);
+                    setTotalOwed(data.summary.total_owed);
+                }
+            } catch (e) {
+                console.log("Error while fetching dashboard, ", e);
+            }
+        };
+        fetchData();
+    }, [isLoggedIn])
     return (
         <>
             <div className="welcome-section relative h-screen">
@@ -91,7 +115,7 @@ function Home({ isLoggedIn }) {
                                     </div>
 
                                     <div className="flex justify-between items-center w-full">
-                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-emerald-300 transition-colors duration-300">$8,000</span>
+                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-emerald-300 transition-colors duration-300">${total_lent.toLocaleString()}</span>
                                         <div className="p-3.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-all duration-300 cursor-pointer shadow-lg shadow-emerald-950/20">
                                             <CirclePlus size={26} strokeWidth={2.5} />
                                         </div>
@@ -128,7 +152,7 @@ function Home({ isLoggedIn }) {
                                     </div>
 
                                     <div className="flex justify-between items-center w-full">
-                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-rose-300 transition-colors duration-300">$8,000</span>
+                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-rose-300 transition-colors duration-300">${total_owed.toLocaleString()}</span>
                                         <div className="p-3.5 bg-rose-500/10 rounded-2xl border border-rose-500/30 text-rose-400 group-hover:bg-rose-500 group-hover:text-black transition-all duration-300 cursor-pointer shadow-lg shadow-rose-950/20">
                                             <CircleMinus size={26} strokeWidth={2.5} />
                                         </div>
