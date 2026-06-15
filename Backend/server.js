@@ -1,4 +1,5 @@
-import dotenv from "dotenv";
+import "dotenv/config";
+
 import express, { json } from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -7,8 +8,6 @@ import transactionRoute from "./routes/transactionRoute.js";
 import chatRoute from "./routes/chatRoute.js";
 import authRoute from "./routes/authRoute.js";
 import "./workers/reminderCron.js";
-
-dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors());
