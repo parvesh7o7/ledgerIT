@@ -34,6 +34,31 @@ const Transaction = {
             total_lent: parseFloat(rows[0].total_lent) || 0,
             total_owed: parseFloat(rows[0].total_owed) || 0
         };
+    },
+
+    getMonthlyCustomerGrowth: async (userID) => {
+        const query = `
+            SELECT 
+                COUNT(DISTINCT CASE 
+                    WHEN YEAR(timestamp) = YEAR(CURDATE()) AND MONTH(timestamp) = MONTH(CURDATE()) 
+                    THEN contact_name 
+                END) AS current_month,
+                COUNT(DISTINCT CASE 
+                    WHEN YEAR(timestamp) = YEAR(CURDATE() - INTERVAL 1 MONTH) AND MONTH(timestamp) = MONTH(CURDATE() - INTERVAL 1 MONTH) 
+                    THEN contact_name 
+                END) AS previous_month
+            FROM transactions 
+            WHERE user_id = ?
+        `;
+        const [rows] = await pool.execute(query, [userID]);
+
+        const current = rows[0].current_month || 0;
+        const previous = rows[0].previous_month || 0;
+        const percentChange = previous > 0
+            ? Math.round(((current - previous) / previous) * 100)
+            : (current > 0 ? 100 : 0);
+
+        return { current_month: current, previous_month: previous, percent_change: percentChange };
     }
 }
 

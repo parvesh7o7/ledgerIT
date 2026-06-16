@@ -13,28 +13,59 @@ function Home({ isLoggedIn }) {
 
     const [total_lent, setTotalLent] = useState(0);
     const [total_owed, setTotalOwed] = useState(0);
+    const [lastLent, setLastLent] = useState(null);
+    const [lastBorrowed, setLastBorrowed] = useState(null);
+    const [total_customers, setTotalCustomers] = useState(0);
+    const [netBalance, setNetBalance] = useState(0);
+    const [customerGrowth, setCustomerGrowth] = useState(0);
+
     useEffect(() => {
-        if (!isLoggedIn) return;
-        const fetchData = async () => {
+        if (!isLoggedIn) {
+            console.log("User not logged in");
+            return;
+        };
+
+        const fetchDashboard = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/dashboard`, {
-                    method: 'GET',
+                const token = localStorage.getItem("token");
+                const res = await fetch("http://localhost:3000/api/transactions/dashboard", {
+                    method: "GET",
                     headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    },
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
                 });
-                const data = await response.json();
+
+                const data = await res.json();
+
                 if (data.success) {
-                    setTotalLent(data.summary.total_lent);
-                    setTotalOwed(data.summary.total_owed);
+                    setTotalLent(data.summary.total_lent || 0);
+                    setTotalOwed(data.summary.total_owed || 0);
+
+                    // Get the most recent debit (lent) and credit (borrowed) transactions
+                    const lastDebit = data.transactions.find(t => t.type === 'debit');
+                    const lastCredit = data.transactions.find(t => t.type === 'credit');
+                    setLastLent(lastDebit || null);
+                    setLastBorrowed(lastCredit || null);
+
+                    const customerLength = data.transactions.length;
+                    setTotalCustomers(customerLength);
+
+                    const net = (data.summary.total_lent || 0) - (data.summary.total_owed || 0);
+                    setNetBalance(net);
+
+                    setCustomerGrowth(data.customerGrowth.percent_change || 0);
+                } else {
+                    console.error("Dashboard fetch failed:", data.error);
                 }
-            } catch (e) {
-                console.log("Error while fetching dashboard, ", e);
+            } catch (error) {
+                console.error("Error fetching dashboard:", error);
             }
         };
-        fetchData();
+
+        fetchDashboard();
     }, [isLoggedIn])
+
     return (
         <>
             <div className="welcome-section relative h-screen">
@@ -114,8 +145,9 @@ function Home({ isLoggedIn }) {
                                         </span>
                                     </div>
 
+
                                     <div className="flex justify-between items-center w-full">
-                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-emerald-300 transition-colors duration-300">${total_lent.toLocaleString()}</span>
+                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-emerald-300 transition-colors duration-300">${total_lent}</span>
                                         <div className="p-3.5 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-all duration-300 cursor-pointer shadow-lg shadow-emerald-950/20">
                                             <CirclePlus size={26} strokeWidth={2.5} />
                                         </div>
@@ -131,8 +163,8 @@ function Home({ isLoggedIn }) {
                                     <span className="text-70 font-bold text-slate-500 tracking-wider uppercase">Recent Activity</span>
                                     <div className="flex items-center gap-2.5 bg-slate-900/45 border border-slate-800/50 rounded-2xl p-4 shadow-inner h-20">
                                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                                        <span className="font-sans text-slate-200 text-xl font-semibold">$700 to Joshua</span>
-                                        <span className="font-sans text-[15px] text-slate-400 ml-auto font-bold">Active</span>
+                                        <span className="font-sans text-slate-200 text-xl font-semibold">{lastLent ? `$${lastLent.amount} to ${lastLent.contact_name}` : 'No activity yet'}</span>
+                                        <span className="font-sans text-[15px] text-slate-400 ml-auto font-bold">{lastLent ? 'Active' : '—'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -151,8 +183,10 @@ function Home({ isLoggedIn }) {
                                         </span>
                                     </div>
 
+
+
                                     <div className="flex justify-between items-center w-full">
-                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-rose-300 transition-colors duration-300">${total_owed.toLocaleString()}</span>
+                                        <span className="font-display text-5xl md:text-6xl font-extrabold tracking-tight text-white group-hover:text-rose-300 transition-colors duration-300">${total_owed}</span>
                                         <div className="p-3.5 bg-rose-500/10 rounded-2xl border border-rose-500/30 text-rose-400 group-hover:bg-rose-500 group-hover:text-black transition-all duration-300 cursor-pointer shadow-lg shadow-rose-950/20">
                                             <CircleMinus size={26} strokeWidth={2.5} />
                                         </div>
@@ -168,8 +202,8 @@ function Home({ isLoggedIn }) {
                                     <span className="text-70 font-bold text-slate-500 tracking-wider uppercase">Recent Activity</span>
                                     <div className="flex items-center gap-2.5 bg-slate-900/45 border border-slate-800/50 rounded-2xl p-4 shadow-inner h-20">
                                         <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
-                                        <span className="font-sans text-slate-200 text-xl font-semibold">$60 from James</span>
-                                        <span className="font-sans text-[15px] text-slate-400 ml-auto font-bold">Pending</span>
+                                        <span className="font-sans text-slate-200 text-xl font-semibold">{lastBorrowed ? `$${lastBorrowed.amount} from ${lastBorrowed.contact_name}` : 'No activity yet'}</span>
+                                        <span className="font-sans text-[15px] text-slate-400 ml-auto font-bold">{lastBorrowed ? 'Pending' : '—'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -181,8 +215,8 @@ function Home({ isLoggedIn }) {
                                 {/* Stat 1: Total Customers */}
                                 <div className="flex flex-col items-center text-center px-6">
                                     <span className="text-base font-bold text-slate-500 tracking-wider uppercase mb-2">Total Customers</span>
-                                    <span className="font-display text-7xl md:text-6xl font-extrabold text-slate-900">1,248</span>
-                                    <span className="text-lg text-emerald-600 font-semibold mt-1 font-sans">+12% from last month</span>
+                                    <span className="font-display text-7xl md:text-6xl font-extrabold text-slate-900">{total_customers}</span>
+                                    <span className={`text-lg font-semibold mt-1 font-sans ${customerGrowth >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>{customerGrowth >= 0 ? '+' : ''}{customerGrowth}% from last month</span>
                                 </div>
 
                                 {/* Divider */}
@@ -192,7 +226,7 @@ function Home({ isLoggedIn }) {
                                 {/* Stat 2: Net Balance */}
                                 <div className="flex flex-col items-center text-center px-6">
                                     <span className="text-base font-bold text-slate-500 tracking-wider uppercase mb-2">Net Balance</span>
-                                    <span className="font-display text-7xl md:text-6xl font-extrabold text-slate-900">$7,940</span>
+                                    <span className="font-display text-7xl md:text-6xl font-extrabold text-slate-900">{netBalance >= 0 ? '+' : '-'}${Math.abs(netBalance)}</span>
                                     <span className="text-lg text-slate-500 font-semibold mt-1 font-sans">Lent vs. Borrowed</span>
                                 </div>
 
@@ -203,7 +237,7 @@ function Home({ isLoggedIn }) {
                                 {/* Stat 3: Total Active Loans */}
                                 <div className="flex flex-col items-center text-center px-6">
                                     <span className="text-base font-bold text-slate-500 tracking-wider uppercase mb-2">Active Loans</span>
-                                    <span className="font-display text-7xl md:text-6xl font-extrabold text-slate-900">86</span>
+                                    <span className="font-display text-7xl md:text-6xl font-extrabold text-slate-900">feature soon!</span>
                                     <span className="text-lg text-indigo-600 font-semibold mt-1 font-sans">Currently active</span>
                                 </div>
                             </div>
