@@ -38,15 +38,17 @@ export const getDashboardSummary = async (req, res, next) => {
     try {
         const userID = req.user.id;
 
-        const [transactions, summary] = await Promise.all([
+        const [transactions, summary, customerGrowth] = await Promise.all([
             Transaction.findTransactionByID(userID),
-            Transaction.getFinancialSummary(userID)
+            Transaction.getFinancialSummary(userID),
+            Transaction.getMonthlyCustomerGrowth(userID)
         ]);
 
         return res.status(200).json({
             success: true,
             summary,
-            transactions
+            transactions,
+            customerGrowth
         });
 
     } catch (error) {
