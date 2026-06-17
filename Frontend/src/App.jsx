@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "../components/Navbar.jsx";
 import Home from "../pages/Home.jsx";
 import "./App.css";
@@ -7,6 +7,7 @@ import Chatbot from "../components/Chatbot.jsx";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const refreshDashboardRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -18,11 +19,11 @@ function App() {
       <ReactLenis root />
       <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <div style={{ marginLeft: "76px" }}>
-        <Home isLoggedIn={isLoggedIn} />
+        <Home isLoggedIn={isLoggedIn} onRefreshReady={(fn) => { refreshDashboardRef.current = fn; }} />
       </div>
       {isLoggedIn && (
         <div style={{ marginLeft: "76px" }}>
-          <Chatbot />
+          <Chatbot onTransactionRecorded={() => refreshDashboardRef.current?.()} />
         </div>
       )}
     </>

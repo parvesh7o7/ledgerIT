@@ -5,7 +5,7 @@ import vdo from '../assets/bg-video.mp4'
 import { CirclePlus, CircleMinus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import TransactionTable from '../components/TransactionTable.jsx';
-function Home({ isLoggedIn }) {
+function Home({ isLoggedIn, onRefreshReady }) {
     const handleGetStarted = () => {
         const googleBtn = document.querySelector("#google-signin-btn div[role='button']");
         if (googleBtn) googleBtn.click();
@@ -20,50 +20,57 @@ function Home({ isLoggedIn }) {
     const [customerGrowth, setCustomerGrowth] = useState(0);
     const [transactions_data, setTransactionsData] = useState([]);
 
+    const fetchDashboard = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const res = await fetch("http://localhost:3000/api/transactions/dashboard", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                setTotalLent(data.summary.total_lent || 0);
+                setTotalOwed(data.summary.total_owed || 0);
+
+                // Get the most recent debit (lent) and credit (borrowed) transactions
+                const lastDebit = data.transactions.find(t => t.type === 'debit');
+                const lastCredit = data.transactions.find(t => t.type === 'credit');
+                setLastLent(lastDebit || null);
+                setLastBorrowed(lastCredit || null);
+
+                const customerLength = data.transactions.length;
+                setTotalCustomers(customerLength);
+
+                const net = (data.summary.total_lent || 0) - (data.summary.total_owed || 0);
+                setNetBalance(net);
+
+                setCustomerGrowth(data.customerGrowth.percent_change || 0);
+
+                setTransactionsData(data.transactions);
+            } else {
+                console.error("Dashboard fetch failed:", data.error);
+            }
+        } catch (error) {
+            console.error("Error fetching dashboard:", error);
+        }
+    };
+
+    // Expose fetchDashboard to parent via callback
+    useEffect(() => {
+        if (onRefreshReady) {
+            onRefreshReady(fetchDashboard);
+        }
+    }, []);
+
     useEffect(() => {
         if (!isLoggedIn) {
             console.log("User not logged in");
             return;
-        };
-
-        const fetchDashboard = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                const res = await fetch("http://localhost:3000/api/transactions/dashboard", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    setTotalLent(data.summary.total_lent || 0);
-                    setTotalOwed(data.summary.total_owed || 0);
-
-                    // Get the most recent debit (lent) and credit (borrowed) transactions
-                    const lastDebit = data.transactions.find(t => t.type === 'debit');
-                    const lastCredit = data.transactions.find(t => t.type === 'credit');
-                    setLastLent(lastDebit || null);
-                    setLastBorrowed(lastCredit || null);
-
-                    const customerLength = data.transactions.length;
-                    setTotalCustomers(customerLength);
-
-                    const net = (data.summary.total_lent || 0) - (data.summary.total_owed || 0);
-                    setNetBalance(net);
-
-                    setCustomerGrowth(data.customerGrowth.percent_change || 0);
-
-                    setTransactionsData(data.transactions);
-                } else {
-                    console.error("Dashboard fetch failed:", data.error);
-                }
-            } catch (error) {
-                console.error("Error fetching dashboard:", error);
-            }
         };
 
         fetchDashboard();
