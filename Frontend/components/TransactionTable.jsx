@@ -1,17 +1,21 @@
 import { useState, useMemo } from "react";
 
-function TransactionTable() {
+function TransactionTable({ transactions_data }) {
     const FILTERS = ["all", "lent", "borrow", "settled"];
     const table_heads = ["#", "Person", "Type", "Amount", "Date", "Note", "Status"];
-    const transactions = [
-        { id: 1, name: "Joshua Reeves", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 700, date: "Jun 08, 2026", note: "Groceries & fuel", status: "pending" },
-        { id: 2, name: "Amara Osei", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 1500, date: "Jun 05, 2026", note: "Medical bills", status: "pending" },
-        { id: 3, name: "James Liu", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "borrow", amount: 60, date: "Jun 04, 2026", note: "Dinner split", status: "settled" },
-        { id: 4, name: "Priya Nair", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 300, date: "Jun 01, 2026", note: "Bus pass", status: "pending" },
-        { id: 5, name: "Priya sain", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 800, date: "Jun 01, 2026", note: "gate pass", status: "settled" },
-        { id: 6, name: "Sanjana", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 800, date: "Jun 01, 2026", note: "gate pass", status: "settled" },
-        { id: 7, name: "Pradhan", profile_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", type: "lent", amount: 800, date: "Jun 01, 2026", note: "gate pass", status: "settled" }
-    ];
+
+    // Map backend data into the format the table expects
+    const transactions = useMemo(() => {
+        return transactions_data.map((t, index) => ({
+            id: t.id || index + 1,
+            name: t.contact_name,
+            type: t.type === 'debit' ? 'lent' : 'borrow',
+            amount: parseFloat(t.amount),
+            date: new Date(t.timestamp).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+            note: t.description || '—',
+            status: 'pending'
+        }));
+    }, [transactions_data]);
 
     const activeTable = transactions;
     const [activeFilter, setActiveFilter] = useState("all");
@@ -76,11 +80,7 @@ function TransactionTable() {
                                     <td className="py-4">
                                         <div className="profile flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full overflow-hidden border border-slate-700/60 bg-slate-800/80 shadow-inner flex items-center justify-center text-lg font-bold text-slate-300">
-                                                <img
-                                                    src={t.profile_url}
-                                                    alt="image"
-                                                    className="w-full h-full object-cover"
-                                                />
+                                                {t.name?.charAt(0).toUpperCase()}
                                             </div>
                                             <span className="font-sans text-lg font-semibold text-slate-100 group-hover:text-white transition-colors duration-150">{t.name}</span>
                                         </div>

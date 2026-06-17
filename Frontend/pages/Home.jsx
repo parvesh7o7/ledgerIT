@@ -18,6 +18,7 @@ function Home({ isLoggedIn }) {
     const [total_customers, setTotalCustomers] = useState(0);
     const [netBalance, setNetBalance] = useState(0);
     const [customerGrowth, setCustomerGrowth] = useState(0);
+    const [transactions_data, setTransactionsData] = useState([]);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -55,6 +56,8 @@ function Home({ isLoggedIn }) {
                     setNetBalance(net);
 
                     setCustomerGrowth(data.customerGrowth.percent_change || 0);
+
+                    setTransactionsData(data.transactions);
                 } else {
                     console.error("Dashboard fetch failed:", data.error);
                 }
@@ -244,7 +247,7 @@ function Home({ isLoggedIn }) {
                         </div>
                     </motion.div>
                     <motion.div className='m-9'>
-                        <TransactionTable />
+                        <TransactionTable transactions_data={transactions_data} />
                     </motion.div>
                 </>
             )}
