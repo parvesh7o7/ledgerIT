@@ -27,7 +27,7 @@ const prompt = ChatPromptTemplate.fromMessages([
 
 const structuredModel = model.withStructuredOutput(ledgerActionSchema);
 
-const chain = model.pipe(structuredModel)
+const chain = prompt.pipe(structuredModel)
 
 export const analyzeChatMessage = async (userText) => {
     return await chain.invoke({ input: userText });
