@@ -5,7 +5,8 @@ import vdo from '../assets/bg-video.mp4'
 import { CirclePlus, CircleMinus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import TransactionTable from '../components/TransactionTable.jsx';
-function Home({ isLoggedIn, onRefreshReady }) {
+import Chatbot from "../components/Chatbot.jsx";
+function Home({ isLoggedIn }) {
     const handleGetStarted = () => {
         const googleBtn = document.querySelector("#google-signin-btn div[role='button']");
         if (googleBtn) googleBtn.click();
@@ -60,12 +61,7 @@ function Home({ isLoggedIn, onRefreshReady }) {
         }
     };
 
-    // Expose fetchDashboard to parent via callback
-    useEffect(() => {
-        if (onRefreshReady) {
-            onRefreshReady(fetchDashboard);
-        }
-    }, []);
+
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -253,8 +249,33 @@ function Home({ isLoggedIn, onRefreshReady }) {
                             </div>
                         </div>
                     </motion.div>
-                    <motion.div className='m-9'>
+                    <motion.div className='m-9'
+                        initial={{
+                            opacity: 0
+                        }}
+                        whileInView={{
+                            opacity: 1
+                        }}
+                        transition={{
+                            ease: "easeIn",
+                            duration: 1
+                        }}
+                    >
                         <TransactionTable transactions_data={transactions_data} />
+                    </motion.div>
+                    <motion.div className='chatbot'
+                        initial={{
+                            opacity: 0
+                        }}
+                        whileInView={{
+                            opacity: 1
+                        }}
+                        transition={{
+                            ease: "easeIn",
+                            duration: 1
+                        }}
+                    >
+                        <Chatbot onTransactionRecorded={fetchDashboard} />
                     </motion.div>
                 </>
             )}

@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { House, Info, HandCoins, LogIn, User } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar({ isLoggedIn, setIsLoggedIn }) {
     const [open, setOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('dashboard');
     const googleBtnRef = useRef(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         // Initialize Google Sign-In once on mount
@@ -86,7 +89,10 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
 
 
                 <div className="navbar-links">
-                    <div className={`navbar-link nav-dashboard ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+                    <div className={`navbar-link nav-dashboard ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => {
+                        setActiveTab('dashboard');
+                        navigate('/');
+                    }}>
                         <House />
                         {open && <>
                             <div className="navbar-label">
@@ -95,7 +101,10 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
                         </>}
                     </div>
 
-                    <div className={`navbar-link nav-about ${activeTab === 'about' ? 'active' : ''}`} onClick={() => setActiveTab('about')}>
+                    <div className={`navbar-link nav-about ${activeTab === 'about' ? 'active' : ''}`} onClick={() => {
+                        setActiveTab('about');
+                        navigate('/about');
+                    }}>
                         <Info />
                         {open && <>
                             <div className="about-label">
@@ -104,7 +113,10 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
                         </>}
                     </div>
 
-                    <div className={`navbar-link nav-pricing ${activeTab === 'pricing' ? 'active' : ''}`} onClick={() => setActiveTab('pricing')}>
+                    <div className={`navbar-link nav-pricing ${activeTab === 'pricing' ? 'active' : ''}`} onClick={() => {
+                        setActiveTab('pricing');
+                        navigate('/pricing');
+                    }}>
                         <HandCoins />
                         {open && <>
                             <div className="pricing-label">
