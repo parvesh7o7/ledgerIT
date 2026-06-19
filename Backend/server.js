@@ -7,7 +7,7 @@ import pool from "./config/db.js";
 import transactionRoute from "./routes/transactionRoute.js";
 import chatRoute from "./routes/chatRoute.js";
 import authRoute from "./routes/authRoute.js";
-import "./workers/reminderCron.js";
+// import "./workers/reminderCron.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors());
@@ -41,3 +41,5 @@ async function startServer() {
 }
 
 startServer();
+
+export default app;
