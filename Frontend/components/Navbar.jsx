@@ -82,7 +82,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
                     {open && <>
                         <div className="navbar-logo-label">
                             <h3>LedgeIT</h3>
-                            <p>Conversational Finance, Autonomous Tracking.</p>
+                            <p>Conversational Finance,<br />Autonomous Tracking.</p>
                         </div>
                     </>}
                 </div>
@@ -113,14 +113,11 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
                         </>}
                     </div>
 
-                    <div className={`navbar-link nav-pricing ${activeTab === 'pricing' ? 'active' : ''}`} onClick={() => {
-                        setActiveTab('pricing');
-                        navigate('/pricing');
-                    }}>
+                    <div className={`navbar-link disabled-nav pricing-label`}>
                         <HandCoins />
                         {open && <>
                             <div className="pricing-label">
-                                <p>Pricing</p>
+                                <p className="text-gray-500">Pricing</p>
                             </div>
                         </>}
                     </div>
@@ -135,7 +132,7 @@ function Navbar({ isLoggedIn, setIsLoggedIn }) {
                             </div>
                             {open && (
                                 <div className="navbar-user-details">
-                                    <p className="navbar-user-info">Welcome {user.name || 'User'}</p>
+                                    <p className="navbar-user-info ">Welcome {user.name || 'User'}</p>
                                     <div className="logout-section">
                                         <button className="log-out-button" onClick={() => handleLogout()}>Logout</button>
                                     </div>

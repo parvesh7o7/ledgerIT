@@ -71,7 +71,7 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
   color: #f8fafc;
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   white-space: nowrap;
@@ -147,9 +147,15 @@
 .about-label p,
 .pricing-label p {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 500;
   white-space: nowrap;
+}
+
+.disabled-nav:hover {
+  cursor: not-allowed;
+  color: #94a3b8;
+  background-color: transparent;
 }
 
 /* Footer Section */
@@ -184,7 +190,7 @@
 
 .navbar-user-info {
   color: #f8fafc;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   font-weight: 600;
   margin: 0;
   white-space: nowrap;
@@ -218,7 +224,7 @@
   border-radius: 8px;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
